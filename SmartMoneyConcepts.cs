@@ -18,6 +18,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 	public class FVGType
 	{
 		public int StartBar;
+		public int EndBar;
 		public double Top;
 		public double Bottom;
 		public bool Bullish;
@@ -30,6 +31,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 	public class OrderBlockType
 	{
 		public int BarIndex;
+		public int EndBar;
 		public double Top;
 		public double Bottom;
 		public bool Bullish;
@@ -40,6 +42,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 	public class SRLevelType
 	{
 		public int BarIndex;
+		public int EndBar;
 		public double Price;
 		public bool IsResistance;
 		public int TouchCount;
@@ -272,6 +275,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 				FVGType fvg = new FVGType
 				{
 					StartBar = CurrentBar - 2,
+					EndBar = CurrentBar,
 					Top = Low[0],
 					Bottom = High[2],
 					Bullish = true,
@@ -288,6 +292,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 				FVGType fvg = new FVGType
 				{
 					StartBar = CurrentBar - 2,
+					EndBar = CurrentBar,
 					Top = Low[2],
 					Bottom = High[0],
 					Bullish = false,
@@ -322,11 +327,16 @@ namespace NinjaTrader.NinjaScript.Indicators
 				if (filled)
 				{
 					fvg.Mitigated = true;
+					fvg.EndBar = CurrentBar;
 					if (RemoveMitigatedFVG)
 					{
 						RemoveDrawObject(fvg.TagFill);
 						list.RemoveAt(i);
 					}
+				}
+				else
+				{
+					fvg.EndBar = CurrentBar;
 				}
 			}
 		}
@@ -338,12 +348,12 @@ namespace NinjaTrader.NinjaScript.Indicators
 				if (fvg.Mitigated && RemoveMitigatedFVG)
 					continue;
 
-				Brush fillBrush = brush.Clone();
-				fillBrush.Opacity = fvg.Mitigated ? 0.08 : 0.25;
-
 				int startBarsAgo = CurrentBar - fvg.StartBar;
+				int endBarsAgo = CurrentBar - fvg.EndBar;
+				int opacity = fvg.Mitigated ? 8 : 22;
+
 				Draw.Rectangle(this, fvg.TagFill, false, startBarsAgo, fvg.Top,
-					0, fvg.Bottom, brush, fillBrush, 70);
+					endBarsAgo, fvg.Bottom, brush, brush, opacity);
 			}
 		}
 
@@ -384,6 +394,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 					OrderBlockType ob = new OrderBlockType
 					{
 						BarIndex = CurrentBar - obOffset,
+						EndBar = CurrentBar,
 						Top = High[obOffset],
 						Bottom = Low[obOffset],
 						Bullish = false,
@@ -404,6 +415,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 					OrderBlockType ob = new OrderBlockType
 					{
 						BarIndex = CurrentBar - obOffset,
+						EndBar = CurrentBar,
 						Top = High[obOffset],
 						Bottom = Low[obOffset],
 						Bullish = true,
@@ -466,11 +478,16 @@ namespace NinjaTrader.NinjaScript.Indicators
 				if (mitigated)
 				{
 					ob.Mitigated = true;
+					ob.EndBar = CurrentBar;
 					if (RemoveMitigatedOB)
 					{
 						RemoveDrawObject(ob.Tag);
 						list.RemoveAt(i);
 					}
+				}
+				else
+				{
+					ob.EndBar = CurrentBar;
 				}
 			}
 		}
@@ -483,10 +500,10 @@ namespace NinjaTrader.NinjaScript.Indicators
 					continue;
 
 				int startOffset = CurrentBar - ob.BarIndex;
-				Brush fillBrush = brush.Clone();
-				fillBrush.Opacity = ob.Mitigated ? 0.08 : 0.20;
+				int endOffset = CurrentBar - ob.EndBar;
+				int opacity = ob.Mitigated ? 6 : 18;
 
-				Draw.Rectangle(this, ob.Tag, false, startOffset, ob.Top, 0, ob.Bottom, brush, fillBrush, 70);
+				Draw.Rectangle(this, ob.Tag, false, startOffset, ob.Top, endOffset, ob.Bottom, brush, brush, opacity);
 			}
 		}
 
@@ -554,6 +571,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 			SRLevelType newLevel = new SRLevelType
 			{
 				BarIndex = barIndex,
+				EndBar = CurrentBar,
 				Price = price,
 				IsResistance = isResistance,
 				TouchCount = 1,
@@ -575,11 +593,16 @@ namespace NinjaTrader.NinjaScript.Indicators
 				if (broken)
 				{
 					lvl.Broken = true;
+					lvl.EndBar = CurrentBar;
 					if (RemoveBrokenSR)
 					{
 						RemoveDrawObject(lvl.Tag);
 						srLevels.RemoveAt(i);
 					}
+				}
+				else
+				{
+					lvl.EndBar = CurrentBar;
 				}
 			}
 		}
@@ -593,10 +616,11 @@ namespace NinjaTrader.NinjaScript.Indicators
 
 				Brush brush = lvl.IsResistance ? ResistanceBrush : SupportBrush;
 				int startOffset = CurrentBar - lvl.BarIndex;
+				int endOffset = CurrentBar - lvl.EndBar;
 				DashStyleHelper dash = lvl.Broken ? DashStyleHelper.Dot : DashStyleHelper.Solid;
 				int width = Math.Min(1 + lvl.TouchCount, 4);
 
-				Draw.Line(this, lvl.Tag, false, startOffset, lvl.Price, 0, lvl.Price, brush, dash, width);
+				Draw.Line(this, lvl.Tag, false, startOffset, lvl.Price, endOffset, lvl.Price, brush, dash, width);
 			}
 		}
 
