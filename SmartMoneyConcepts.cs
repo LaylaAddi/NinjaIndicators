@@ -86,8 +86,8 @@ namespace NinjaTrader.NinjaScript.Indicators
 		[Browsable(false)]
 		public string BullishFVGBrushSerialize
 		{
-			get { return NinjaTrader.NinjaScript.Serialize.BrushToString(BullishFVGBrush); }
-			set { BullishFVGBrush = NinjaTrader.NinjaScript.Serialize.StringToBrush(value); }
+			get { return BrushToString(BullishFVGBrush); }
+			set { BullishFVGBrush = StringToBrush(value); }
 		}
 
 		[XmlIgnore]
@@ -96,8 +96,8 @@ namespace NinjaTrader.NinjaScript.Indicators
 		[Browsable(false)]
 		public string BearishFVGBrushSerialize
 		{
-			get { return NinjaTrader.NinjaScript.Serialize.BrushToString(BearishFVGBrush); }
-			set { BearishFVGBrush = NinjaTrader.NinjaScript.Serialize.StringToBrush(value); }
+			get { return BrushToString(BearishFVGBrush); }
+			set { BearishFVGBrush = StringToBrush(value); }
 		}
 
 		[NinjaScriptProperty]
@@ -124,8 +124,8 @@ namespace NinjaTrader.NinjaScript.Indicators
 		[Browsable(false)]
 		public string BullishOBBrushSerialize
 		{
-			get { return NinjaTrader.NinjaScript.Serialize.BrushToString(BullishOBBrush); }
-			set { BullishOBBrush = NinjaTrader.NinjaScript.Serialize.StringToBrush(value); }
+			get { return BrushToString(BullishOBBrush); }
+			set { BullishOBBrush = StringToBrush(value); }
 		}
 
 		[XmlIgnore]
@@ -134,8 +134,8 @@ namespace NinjaTrader.NinjaScript.Indicators
 		[Browsable(false)]
 		public string BearishOBBrushSerialize
 		{
-			get { return NinjaTrader.NinjaScript.Serialize.BrushToString(BearishOBBrush); }
-			set { BearishOBBrush = NinjaTrader.NinjaScript.Serialize.StringToBrush(value); }
+			get { return BrushToString(BearishOBBrush); }
+			set { BearishOBBrush = StringToBrush(value); }
 		}
 
 		[NinjaScriptProperty]
@@ -167,8 +167,8 @@ namespace NinjaTrader.NinjaScript.Indicators
 		[Browsable(false)]
 		public string ResistanceBrushSerialize
 		{
-			get { return NinjaTrader.NinjaScript.Serialize.BrushToString(ResistanceBrush); }
-			set { ResistanceBrush = NinjaTrader.NinjaScript.Serialize.StringToBrush(value); }
+			get { return BrushToString(ResistanceBrush); }
+			set { ResistanceBrush = StringToBrush(value); }
 		}
 
 		[XmlIgnore]
@@ -177,11 +177,25 @@ namespace NinjaTrader.NinjaScript.Indicators
 		[Browsable(false)]
 		public string SupportBrushSerialize
 		{
-			get { return NinjaTrader.NinjaScript.Serialize.BrushToString(SupportBrush); }
-			set { SupportBrush = NinjaTrader.NinjaScript.Serialize.StringToBrush(value); }
+			get { return BrushToString(SupportBrush); }
+			set { SupportBrush = StringToBrush(value); }
 		}
 
 		#endregion
+
+		private static string BrushToString(Brush brush)
+		{
+			return brush == null ? string.Empty : brush.ToString();
+		}
+
+		private static Brush StringToBrush(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+				return null;
+			Brush brush = (Brush)new BrushConverter().ConvertFromString(value);
+			brush.Freeze();
+			return brush;
+		}
 
 		protected override void OnStateChange()
 		{
