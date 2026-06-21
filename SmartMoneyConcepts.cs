@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Windows.Media;
 using System.Xml.Serialization;
 using NinjaTrader.Cbi;
+using NinjaTrader.Gui;
 using NinjaTrader.Gui.Tools;
 using NinjaTrader.NinjaScript;
 using NinjaTrader.NinjaScript.DrawingTools;
@@ -85,8 +86,8 @@ namespace NinjaTrader.NinjaScript.Indicators
 		[Browsable(false)]
 		public string BullishFVGBrushSerialize
 		{
-			get { return Serialize.BrushToString(BullishFVGBrush); }
-			set { BullishFVGBrush = Serialize.StringToBrush(value); }
+			get { return NinjaTrader.NinjaScript.Serialize.BrushToString(BullishFVGBrush); }
+			set { BullishFVGBrush = NinjaTrader.NinjaScript.Serialize.StringToBrush(value); }
 		}
 
 		[XmlIgnore]
@@ -95,8 +96,8 @@ namespace NinjaTrader.NinjaScript.Indicators
 		[Browsable(false)]
 		public string BearishFVGBrushSerialize
 		{
-			get { return Serialize.BrushToString(BearishFVGBrush); }
-			set { BearishFVGBrush = Serialize.StringToBrush(value); }
+			get { return NinjaTrader.NinjaScript.Serialize.BrushToString(BearishFVGBrush); }
+			set { BearishFVGBrush = NinjaTrader.NinjaScript.Serialize.StringToBrush(value); }
 		}
 
 		[NinjaScriptProperty]
@@ -123,8 +124,8 @@ namespace NinjaTrader.NinjaScript.Indicators
 		[Browsable(false)]
 		public string BullishOBBrushSerialize
 		{
-			get { return Serialize.BrushToString(BullishOBBrush); }
-			set { BullishOBBrush = Serialize.StringToBrush(value); }
+			get { return NinjaTrader.NinjaScript.Serialize.BrushToString(BullishOBBrush); }
+			set { BullishOBBrush = NinjaTrader.NinjaScript.Serialize.StringToBrush(value); }
 		}
 
 		[XmlIgnore]
@@ -133,8 +134,8 @@ namespace NinjaTrader.NinjaScript.Indicators
 		[Browsable(false)]
 		public string BearishOBBrushSerialize
 		{
-			get { return Serialize.BrushToString(BearishOBBrush); }
-			set { BearishOBBrush = Serialize.StringToBrush(value); }
+			get { return NinjaTrader.NinjaScript.Serialize.BrushToString(BearishOBBrush); }
+			set { BearishOBBrush = NinjaTrader.NinjaScript.Serialize.StringToBrush(value); }
 		}
 
 		[NinjaScriptProperty]
@@ -166,8 +167,8 @@ namespace NinjaTrader.NinjaScript.Indicators
 		[Browsable(false)]
 		public string ResistanceBrushSerialize
 		{
-			get { return Serialize.BrushToString(ResistanceBrush); }
-			set { ResistanceBrush = Serialize.StringToBrush(value); }
+			get { return NinjaTrader.NinjaScript.Serialize.BrushToString(ResistanceBrush); }
+			set { ResistanceBrush = NinjaTrader.NinjaScript.Serialize.StringToBrush(value); }
 		}
 
 		[XmlIgnore]
@@ -176,8 +177,8 @@ namespace NinjaTrader.NinjaScript.Indicators
 		[Browsable(false)]
 		public string SupportBrushSerialize
 		{
-			get { return Serialize.BrushToString(SupportBrush); }
-			set { SupportBrush = Serialize.StringToBrush(value); }
+			get { return NinjaTrader.NinjaScript.Serialize.BrushToString(SupportBrush); }
+			set { SupportBrush = NinjaTrader.NinjaScript.Serialize.StringToBrush(value); }
 		}
 
 		#endregion
@@ -192,7 +193,6 @@ namespace NinjaTrader.NinjaScript.Indicators
 				IsOverlay = true;
 				DisplayInDataBox = false;
 				DrawOnPricePanel = true;
-				PaintPriority = PaintPriority.AboveBars;
 				IsSuspendedWhileInactive = true;
 
 				ShowFVG = true;
@@ -229,8 +229,6 @@ namespace NinjaTrader.NinjaScript.Indicators
 
 				swingHigh = new Series<double>(this);
 				swingLow = new Series<double>(this);
-
-				AddChartIndicator(ATR(14));
 			}
 		}
 
